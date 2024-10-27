@@ -1,0 +1,67 @@
+from googletrans import Translator
+
+def traduzir_lyrics(lyrics_text):
+    """Função para traduzir o texto de uma letra para o português."""
+    translator = Translator()
+    translated = translator.translate(lyrics_text, src="en", dest="pt").text
+    return translated
+
+# Letras originais das músicas
+letras = {
+    "Asleep": "Sing me to sleep, sing me to sleep...",
+    "Bigmouth Strikes Again": "Sweetness, sweetness, I was only joking...",
+    "Back to the Old House": "I would rather not go back to the old house..."
+}
+
+# Começo do HTML
+html = '''<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reprodutor de Áudio</title>
+    <link rel="stylesheet" href="styleaudio.css">
+</head>
+<body>
+    <div class="audio-player">
+        <div id="album-cover-container">
+            <img id="album-cover" src="Back to the old house.jpg" alt="Capa do Álbum">
+        </div>
+        <audio id="audio" controls></audio>
+        <div id="controls">
+            <span id="current-time">0:00</span> / <span id="duration">0:00</span>
+        </div>
+        <h2>Lista de Faixas</h2>
+        <ul id="track-list">'''
+
+# Gerando a lista de faixas com letras traduzidas
+for faixa, letra in letras.items():
+    letra_traduzida = traduzir_lyrics(letra)
+    html += f'''
+            <li>
+                <button class="track"
+                        data-src="audio-file-{faixa.replace(" ", "_").lower()}.mp3"
+                        data-cover="{faixa.replace(" ", "_")}.jpg"
+                        data-lyrics="{letra_traduzida}">
+                    {faixa}
+                </button>
+            </li>'''
+
+# Finalizando o HTML
+html += '''
+        </ul>
+        <div id="lyrics-container">
+            <h3>Letra da Música</h3>
+            <div id="lyrics"></div>
+        </div>
+    </div>
+    <a href="index.html"><button>Voltar para a Página Principal</button></a>
+    <script src="Java1.js"></script>
+</body>
+</html>'''
+
+# Salvando o HTML com as letras traduzidas
+with open("index_traduzido.html", "w", encoding="utf-8") as file:
+    file.write(html)
+
+print("HTML com letras traduzidas gerado com sucesso!")
